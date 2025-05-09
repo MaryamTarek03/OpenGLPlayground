@@ -373,7 +373,6 @@ void drawEarth() {
     // sphere
     GLUquadricObj* earth = gluNewQuadric();
     gluQuadricTexture(earth, GL_TRUE);
-    gluQuadricNormals(earth, GLU_SMOOTH);
     gluSphere(earth, 20.0f, 32, 32);
     gluDeleteQuadric(earth);
 
@@ -395,7 +394,6 @@ void drawRocket() {
     // rocket body (cylinder)
     GLUquadricObj* body = gluNewQuadric();
     gluQuadricTexture(body, GL_TRUE);
-    gluQuadricNormals(body, GLU_SMOOTH);
     gluCylinder(body, 0.1f, 0.1f, 0.4f, 12, 12);
 
     // rocket cone
@@ -403,29 +401,26 @@ void drawRocket() {
     glTranslatef(0.0f, 0.0f, 0.4f);  // top of cylinder
     GLUquadricObj* nose = gluNewQuadric();
     gluQuadricTexture(nose, GL_TRUE);
-    gluQuadricNormals(nose, GLU_SMOOTH);
     gluCylinder(nose, 0.1f, 0.0f, 0.2f, 12, 12);
     gluDeleteQuadric(nose);
     glPopMatrix();
 
     // rocket base
-    GLfloat finMaterial[] = { 0.7f, 0.7f, 0.7f, 1.0f };
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, finMaterial);
+    GLfloat baseMaterial[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, baseMaterial);
 
-    // base right side
+    // base right
     glBegin(GL_TRIANGLES);
-    glNormal3f(0.0f, 0.0f, 1.0f);
-    glVertex3f(0.0f, 0.0f, 0.0f);    // Base center
-    glVertex3f(0.15f, 0.0f, -0.1f);  // Right tip
-    glVertex3f(0.0f, 0.0f, -0.2f);   // Back center
+    glTexCoord2f(0, 0); glVertex3f(0.0f, 0.0f, 0.0f);    // Base center
+    glTexCoord2f(0, 1); glVertex3f(0.15f, 0.0f, -0.1f);  // Right tip
+    glTexCoord2f(1, 0); glVertex3f(0.0f, 0.0f, -0.2f);   // Back center
     glEnd();
 
     // base left
     glBegin(GL_TRIANGLES);
-    glNormal3f(0.0f, 0.0f, 1.0f);
-    glVertex3f(0.0f, 0.0f, 0.0f);     // Base center
-    glVertex3f(-0.15f, 0.0f, -0.1f);  // Left tip
-    glVertex3f(0.0f, 0.0f, -0.2f);    // Back center
+    glTexCoord2f(0, 0); glVertex3f(0.0f, 0.0f, 0.0f);     // Base center
+    glTexCoord2f(0, 1); glVertex3f(-0.15f, 0.0f, -0.1f);  // Left tip
+    glTexCoord2f(1, 0); glVertex3f(0.0f, 0.0f, -0.2f);    // Back center
     glEnd();
 
     gluDeleteQuadric(body);
@@ -444,7 +439,6 @@ void drawObstacle(Obstacle& obstacle) {
     // a temporary quadric for texture coordinates
     GLUquadricObj* sphere = gluNewQuadric();
     gluQuadricTexture(sphere, GL_TRUE);  // enable texture coordinates
-    gluQuadricNormals(sphere, GLU_SMOOTH);
     gluSphere(sphere, obstacle.radius, 12, 12);
     gluDeleteQuadric(sphere);
 
