@@ -7,13 +7,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-/* TODO:
-    - make the game get harder by time (increase game speed)
-    - add full screen button (F11)
-    - maybe remove left and right function because it does not work
-    - add score?
-*/
-
 /* Checklist:
     - [x] 3D 
         - Contains 3D shapes
@@ -41,10 +34,10 @@
 
 // game constants
 const float PI = 3.14159265f;
-const int screenWidth = 800;
-const int screenHeight = 600;
-const float gameSpeed = .05f; // more speed more difficulty
-const float rocketSpeed = 0.1f;
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 600;
+const float GAME_SPEED = .05F;
+const float ROCKET_SPEED = 0.1f;
 
 // texture IDs
 GLuint earthTexture;
@@ -74,6 +67,7 @@ struct Obstacle : GameObject {
 Rocket rocket;
 std::vector<Obstacle> obstacles;
 float gameTime = 0.0f;
+float gameSpeed = .05f; // more speed more difficulty
 bool isFullscreen = false;
 bool gameOver = false;
 bool gamePaused = false;
@@ -107,7 +101,7 @@ void resetGame();
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(screenWidth, screenHeight);
+    glutInitWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     glutCreateWindow("Rocket Game");
 
     glutDisplayFunc(display);
@@ -197,6 +191,7 @@ void resetGame() {
 
     gameTime = 0.0f;
     gameOver = false;
+    gameSpeed = GAME_SPEED;
 
     earthRotationAngle = 0.0f;
 
@@ -275,7 +270,7 @@ void specialKeys(int key, int x, int y) {
         if (isFullscreen) 
             glutFullScreen();
         else {
-            glutReshapeWindow(screenWidth, screenHeight);
+            glutReshapeWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
             glutPositionWindow(100, 100);
         }
         break;
@@ -343,6 +338,9 @@ void updateGame() {
 
     // update game time
     gameTime += gameSpeed;
+
+    // update game difficulty with time
+    gameSpeed += 0.0001;
 
     // update rocket position
     rocket.y += rocket.velocity;
@@ -501,7 +499,7 @@ void display() {
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    gluOrtho2D(0, screenWidth, 0, screenHeight);
+    gluOrtho2D(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT);
 
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
@@ -514,7 +512,7 @@ void display() {
     if (gameOver) {
         std::string gameOverText = "Game Over! Press 'R' to restart.";
         glColor3f(1.0f, 0.0f, 0.0f); // red
-        glRasterPos2i(screenWidth / 2 - 120, screenHeight / 2);
+        glRasterPos2i(SCREEN_WIDTH / 2 - 120, SCREEN_HEIGHT / 2);
         for (char c : gameOverText) {
             glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
         }
